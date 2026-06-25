@@ -1,0 +1,10 @@
+[project]
+name = "mcp-for-tq"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.28.0",
+    "httpx>=0.28.0",
+    "pydantic-settings>=2.5.0",
+]
