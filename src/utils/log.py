@@ -27,9 +27,9 @@ def setup_logging():
         console.setFormatter(logging.Formatter(fmt_console))
         root.addHandler(console)
 
-    if not any(isinstance(h, TimedRotatingFileHandler) and getattr(h, '_baseFilename', '').endswith('tradingagents.log') for h in root.handlers):
+    if not any(isinstance(h, TimedRotatingFileHandler) and getattr(h, '_baseFilename', '').endswith('tq_mcp.log') for h in root.handlers):
         fh = TimedRotatingFileHandler(
-            filename=Path(log_dir) / "tradingagents.log",
+            filename=Path(log_dir) / "tq_mcp.log",
             when="midnight",
             interval=1,
             backupCount=7,
