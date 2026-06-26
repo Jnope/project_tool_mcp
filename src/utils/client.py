@@ -3,7 +3,7 @@ from typing import Any
 
 import httpx
 
-from config import JUPYTER_TOKEN
+from src.utils.config import JUPYTER_TOKEN
 
 logger = logging.getLogger("mcp-for-tq")
 

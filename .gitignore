@@ -1,3 +1,4 @@
 .vene/
 .idea/
 test_*.py
+.env

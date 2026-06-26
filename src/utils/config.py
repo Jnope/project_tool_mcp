@@ -115,6 +115,26 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
+    def get_project_list_url(self) -> str:
+        return f"{self.base_url}/project/getProjectList"
+
+    @computed_field
+    @property
+    def get_env_list_url(self) -> str:
+        return f"{self.base_url}/env/getEnvList"
+
+    @computed_field
+    @property
+    def set_theme_run_param_url(self) -> str:
+        return f"{self.base_url}/project/setThemeRunParam"
+
+    @computed_field
+    @property
+    def execute_theme_url(self) -> str:
+        return f"{self.base_url}/project/executeTheme"
+
+    @computed_field
+    @property
     def jupyter_token(self) -> str:
         return self.token or "b97bbd24-5a61-4f58-a13f-23e1af69e378"
 
@@ -134,7 +154,15 @@ settings = Settings()
 
 CREATE_PROJECT_URL = settings.create_project_url
 ADD_PROJECT_THEME_URL = settings.add_project_theme_url
+GET_PROJECT_LIST_URL = settings.get_project_list_url
+GET_ENV_LIST_URL = settings.get_env_list_url
+SET_THEME_RUN_PARAM_URL = settings.set_theme_run_param_url
+EXECUTE_THEME_URL = settings.execute_theme_url
 JUPYTER_TOKEN = settings.jupyter_token
 
 logger.info(f"CREATE_PROJECT_URL = {CREATE_PROJECT_URL}")
 logger.info(f"ADD_PROJECT_THEME_URL = {ADD_PROJECT_THEME_URL}")
+logger.info(f"GET_PROJECT_LIST_URL = {GET_PROJECT_LIST_URL}")
+logger.info(f"GET_ENV_LIST_URL = {GET_ENV_LIST_URL}")
+logger.info(f"SET_THEME_RUN_PARAM_URL = {SET_THEME_RUN_PARAM_URL}")
+logger.info(f"EXECUTE_THEME_URL = {EXECUTE_THEME_URL}")
