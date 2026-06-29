@@ -24,7 +24,7 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
         page_size: int = 10,
         ctx: Context = None,
     ) -> dict:
-        """获取用户项目列表（分页）
+        """获取用户研究项目列表（分页）
 
         Args:
             name: 项目名称关键词（模糊搜索），默认为空（查全部）
@@ -51,7 +51,6 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
     async def create_project(
         project_name: str,
         comment: str = "",
-        path: str = "",
         ctx: Context = None,
     ) -> dict:
         """创建研究项目
@@ -59,13 +58,9 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
         Args:
             project_name: 项目名称（必填，不能为空）
             comment: 项目备注/描述，默认为空
-            path: 项目路径（包含项目文件夹），默认为空
         """
         if not project_name or not project_name.strip():
             return {"success": False, "error": "项目名不能为空"}
-
-        if not path or not path.strip():
-            path = project_name
 
         if ctx:
             await ctx.info(f"正在创建项目: {project_name}")
@@ -73,7 +68,7 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
         payload = {
             "projectName": project_name.strip(),
             "comment": comment,
-            "path": path,
+            "path": project_name,
         }
 
         return await tq_client.post(CREATE_PROJECT_URL, json=payload)
@@ -86,7 +81,7 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
         comment: str = "",
         ctx: Context = None,
     ) -> dict:
-        """为项目新增主题（策略/因子/通用）
+        """为研究项目新增主题（策略/因子/通用）
 
         Args:
             project_id: 所属项目ID（必填）
@@ -115,20 +110,13 @@ def register_project_theme_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     async def get_env_list(
-        team_id: int | None = None,
         ctx: Context = None,
     ) -> dict:
-        """获取环境列表
-
-        Args:
-            team_id: 团队ID（可选），不传则查询当前用户环境
-        """
+        """获取用户环境列表"""
         if ctx:
             await ctx.info("正在获取环境列表")
 
-        params = {"teamId": team_id} if team_id is not None else None
-
-        return await tq_client.get(GET_ENV_LIST_URL, params=params)
+        return await tq_client.get(GET_ENV_LIST_URL)
 
     @mcp.tool()
     async def set_theme_run_param(

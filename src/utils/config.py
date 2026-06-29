@@ -156,7 +156,12 @@ class Settings(BaseSettings):
     @computed_field
     @property
     def get_board_list_url(self) -> str:
-        return f"{self.base_url}/board/getBoardList"
+        return f"{self.base_url}/project/board/getBoardList"
+
+    @computed_field
+    @property
+    def add_board_themes_url(self) -> str:
+        return f"{self.base_url}/project/board/addThemes"
 
     @computed_field
     @property
@@ -188,6 +193,7 @@ CREATE_QUARTZ_URL = settings.create_quartz_url
 ADD_QUARTZ_THEMES_URL = settings.add_quartz_themes_url
 START_QUARTZ_URL = settings.start_quartz_url
 GET_BOARD_LIST_URL = settings.get_board_list_url
+ADD_BOARD_THEMES_URL = settings.add_board_themes_url
 JUPYTER_TOKEN = settings.jupyter_token
 
 logger.info(f"CREATE_PROJECT_URL = {CREATE_PROJECT_URL}")
@@ -201,3 +207,4 @@ logger.info(f"CREATE_QUARTZ_URL = {CREATE_QUARTZ_URL}")
 logger.info(f"ADD_QUARTZ_THEMES_URL = {ADD_QUARTZ_THEMES_URL}")
 logger.info(f"START_QUARTZ_URL = {START_QUARTZ_URL}")
 logger.info(f"GET_BOARD_LIST_URL = {GET_BOARD_LIST_URL}")
+logger.info(f"ADD_BOARD_THEMES_URL = {ADD_BOARD_THEMES_URL}")

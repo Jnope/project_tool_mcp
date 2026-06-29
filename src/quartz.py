@@ -18,14 +18,12 @@ def register_quartz_tools(mcp: FastMCP) -> None:
     @mcp.tool()
     async def get_quartz_list(
         theme_type: int | None = None,
-        team_id: int | None = None,
         ctx: Context = None,
     ) -> dict:
-        """获取增量跟踪（定时任务）列表
+        """获取定时任务列表
 
         Args:
             theme_type: 主题类型筛选：0=策略，1=因子，2=通用（可选）
-            team_id: 团队ID（可选）
         """
         if ctx:
             await ctx.info("正在获取定时任务列表")
@@ -33,8 +31,6 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         params: dict = {}
         if theme_type is not None:
             params["themeType"] = theme_type
-        if team_id is not None:
-            params["teamId"] = team_id
 
         return await tq_client.get(GET_QUARTZ_LIST_URL, params=params or None)
 
@@ -52,7 +48,7 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         env_info: str = "",
         ctx: Context = None,
     ) -> dict:
-        """创建增量跟踪（定时任务）
+        """创建定时任务
 
         Args:
             job_name: 任务名（必填，不能为空）
