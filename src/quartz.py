@@ -7,6 +7,7 @@ from src.utils.config import (
     CREATE_QUARTZ_URL,
     ADD_QUARTZ_THEMES_URL,
     START_QUARTZ_URL,
+    GET_ALL_SIMPLE_THEMES_URL,
 )
 from src.utils.client import tq_client
 
@@ -17,22 +18,18 @@ def register_quartz_tools(mcp: FastMCP) -> None:
 
     @mcp.tool()
     async def get_quartz_list(
-        theme_type: int | None = None,
-        ctx: Context = None,
+        ctx: Context,
     ) -> dict:
         """获取定时任务列表
 
-        Args:
-            theme_type: 主题类型筛选：0=策略，1=因子，2=通用（可选）
+        Returns:
+            list:
+                runStatus: 0：生效中，1：已停止，2：已结束，3: 未启动
         """
         if ctx:
             await ctx.info("正在获取定时任务列表")
 
-        params: dict = {}
-        if theme_type is not None:
-            params["themeType"] = theme_type
-
-        return await tq_client.get(GET_QUARTZ_LIST_URL, params=params or None)
+        return await tq_client.get(GET_QUARTZ_LIST_URL)
 
     @mcp.tool()
     async def create_quartz(
@@ -48,11 +45,11 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         env_info: str = "",
         ctx: Context = None,
     ) -> dict:
-        """创建定时任务
+        """创建投研定时任务
 
         Args:
             job_name: 任务名（必填，不能为空）
-            env_id: 执行环境ID（可选）
+            env_id: 执行环境ID（必填，可通过 get_env_list 获取）
             is_solid: 0=不固化，1=固化，默认0
             schedule_frequency: 0=普通任务，1=常驻任务，默认0
             days: 执行天数，[0]=每天，[1-7]=周日至周六（可选）
@@ -90,20 +87,16 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         return await tq_client.post(CREATE_QUARTZ_URL, json=payload)
 
     @mcp.tool()
-    async def add_quartz_themes(
+    async def add_quartz_theme(
         quartz_id: str,
-        project_ids: list[str] | None = None,
-        exclude_theme_ids: list[str] | None = None,
-        theme_ids: list[str] | None = None,
+        theme_id: str,
         ctx: Context = None,
     ) -> dict:
         """为定时任务添加主题
 
         Args:
-            quartz_id: 定时任务ID（必填）
-            project_ids: 项目ID列表，添加项目下所有可添加的主题（可选）
-            exclude_theme_ids: 排除的主题ID列表（可选）
-            theme_ids: 待添加的主题ID列表（可选）
+            quartz_id: 定时任务ID（必填，可通过 get_quartz_list 获取）
+            theme_id: 主题uuid（必填，可通过 get_project_theme_list 获取）
         """
         if not quartz_id or not quartz_id.strip():
             return {"success": False, "error": "定时任务ID不能为空"}
@@ -111,13 +104,11 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         if ctx:
             await ctx.info(f"正在为定时任务 {quartz_id} 添加主题")
 
-        payload: dict = {"quartzId": quartz_id.strip()}
-        if project_ids is not None:
-            payload["projectIds"] = project_ids
-        if exclude_theme_ids is not None:
-            payload["excludeThemeIds"] = exclude_theme_ids
-        if theme_ids is not None:
-            payload["themeIds"] = theme_ids
+        payload: dict = {
+            "quartzId": quartz_id.strip(),
+            "projectIds": [],
+            "themeIds": [theme_id.strip()],
+        }
 
         return await tq_client.post(ADD_QUARTZ_THEMES_URL, json=payload)
 
@@ -129,7 +120,7 @@ def register_quartz_tools(mcp: FastMCP) -> None:
         """启动定时任务
 
         Args:
-            job_key: 任务key（必填，通过 get_quartz_list 获取的 jobKey 字段）
+            job_key: 任务key（必填，可通过 get_quartz_list 获取的 jobKey 字段）
         """
         if not job_key or not job_key.strip():
             return {"success": False, "error": "任务key不能为空"}
@@ -139,3 +130,22 @@ def register_quartz_tools(mcp: FastMCP) -> None:
 
         params = {"jobKey": job_key.strip()}
         return await tq_client.get(START_QUARTZ_URL, params=params)
+
+    @mcp.tool()
+    async def get_quartz_themes(
+        quartz_id: str,
+        ctx: Context = None,
+    ) -> dict:
+        """获取定时任务下所有主题
+
+        Args:
+            quartz_id: 定时任务ID（必填，可通过 get_quartz_list 获取）
+        """
+        if not quartz_id or not quartz_id.strip():
+            return {"success": False, "error": "定时任务ID不能为空"}
+
+        if ctx:
+            await ctx.info(f"正在获取定时任务 {quartz_id} 下的所有主题")
+
+        params = {"quartzId": quartz_id.strip()}
+        return await tq_client.get(GET_ALL_SIMPLE_THEMES_URL, params=params)

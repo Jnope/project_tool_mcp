@@ -120,6 +120,11 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
+    def get_project_theme_list_url(self) -> str:
+        return f"{self.base_url}/project/getProjectThemeList"
+
+    @computed_field
+    @property
     def get_env_list_url(self) -> str:
         return f"{self.base_url}/env/getEnvList"
 
@@ -155,8 +160,18 @@ class Settings(BaseSettings):
 
     @computed_field
     @property
+    def get_all_simple_themes_url(self) -> str:
+        return f"{self.base_url}/project/quartz/getAllSimpleThemes"
+
+    @computed_field
+    @property
     def get_board_list_url(self) -> str:
         return f"{self.base_url}/project/board/getBoardList"
+
+    @computed_field
+    @property
+    def create_board_url(self) -> str:
+        return f"{self.base_url}/project/board/createBoard"
 
     @computed_field
     @property
@@ -185,6 +200,7 @@ settings = Settings()
 CREATE_PROJECT_URL = settings.create_project_url
 ADD_PROJECT_THEME_URL = settings.add_project_theme_url
 GET_PROJECT_LIST_URL = settings.get_project_list_url
+GET_PROJECT_THEME_LIST_URL = settings.get_project_theme_list_url
 GET_ENV_LIST_URL = settings.get_env_list_url
 SET_THEME_RUN_PARAM_URL = settings.set_theme_run_param_url
 EXECUTE_THEME_URL = settings.execute_theme_url
@@ -192,19 +208,9 @@ GET_QUARTZ_LIST_URL = settings.get_quartz_list_url
 CREATE_QUARTZ_URL = settings.create_quartz_url
 ADD_QUARTZ_THEMES_URL = settings.add_quartz_themes_url
 START_QUARTZ_URL = settings.start_quartz_url
+GET_ALL_SIMPLE_THEMES_URL = settings.get_all_simple_themes_url
 GET_BOARD_LIST_URL = settings.get_board_list_url
+CREATE_BOARD_URL = settings.create_board_url
 ADD_BOARD_THEMES_URL = settings.add_board_themes_url
 JUPYTER_TOKEN = settings.jupyter_token
 
-logger.info(f"CREATE_PROJECT_URL = {CREATE_PROJECT_URL}")
-logger.info(f"ADD_PROJECT_THEME_URL = {ADD_PROJECT_THEME_URL}")
-logger.info(f"GET_PROJECT_LIST_URL = {GET_PROJECT_LIST_URL}")
-logger.info(f"GET_ENV_LIST_URL = {GET_ENV_LIST_URL}")
-logger.info(f"SET_THEME_RUN_PARAM_URL = {SET_THEME_RUN_PARAM_URL}")
-logger.info(f"EXECUTE_THEME_URL = {EXECUTE_THEME_URL}")
-logger.info(f"GET_QUARTZ_LIST_URL = {GET_QUARTZ_LIST_URL}")
-logger.info(f"CREATE_QUARTZ_URL = {CREATE_QUARTZ_URL}")
-logger.info(f"ADD_QUARTZ_THEMES_URL = {ADD_QUARTZ_THEMES_URL}")
-logger.info(f"START_QUARTZ_URL = {START_QUARTZ_URL}")
-logger.info(f"GET_BOARD_LIST_URL = {GET_BOARD_LIST_URL}")
-logger.info(f"ADD_BOARD_THEMES_URL = {ADD_BOARD_THEMES_URL}")
